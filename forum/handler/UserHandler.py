@@ -1,10 +1,14 @@
+import urllib
+
 from forum.handler.BaseHandler import BaseHandler
+from forum.utils.zhi_fu_bao_utils import make_zhi_fu_bao_url
 from forum.wtforms import UserForm
 from forum.models import UserModel
 from uuid import uuid4
 from forum.utils.email_util import send_mail
 from config import email
 from random import choice
+from forum.utils import utils
 
 
 class AddUserHandler(BaseHandler):
@@ -57,3 +61,45 @@ class SendEmail(BaseHandler):
                   subject='用户注册验证码', txt=msg)
         self.redis.set(user_email, code)
         print(self.redis.get(user_email))
+
+
+class ZhiFuBaoPayHandler(BaseHandler):
+    def get(self):
+        # 使用self.redirect()方法进行跳转
+        self.render('index.html')
+        # self.redirect('/')
+
+
+class BuyHandler(BaseHandler):
+    def get(self, product_id):
+        product_id = product_id
+        out_trade_no = utils.get_obtain_order_number()
+        url = make_zhi_fu_bao_url(total_amount=product_id, out_trade_no=out_trade_no)
+        print(url)
+        self.redirect(url)
+
+
+class AliPayNotify(BaseHandler):
+    def prepare(self):
+        pass
+
+    def get(self):
+        return self._request()
+
+    def post(self):
+        return self._request()
+
+    def _request(self):
+        order_id = self.get_string('out_trade_no')
+        # 回调后直接调查询在查一次
+        result, msg = queryalipay(order_id)
+        if not result:
+            print("失败！")
+
+    def get_string(self, name):
+        """获取查询字符串值"""
+        if name == "params":
+            urlenparams = self.get_argument(name, '')
+            serialparams = urllib.parse.unquote(urlenparams, 'utf-8', 'ignore')
+            return serialparams
+        return self.get_argument(name, '')

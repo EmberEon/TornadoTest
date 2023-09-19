@@ -1,4 +1,3 @@
-import peewee_async
 from tornado import ioloop
 from forum import create_app, obj
 from forum.models import *

@@ -1,6 +1,6 @@
 from wtforms import StringField
 from wtforms.fields.simple import HiddenField
-from wtforms_tornado import Form
+from wtforms import Form
 from wtforms.validators import DataRequired, Length
 
 
@@ -12,3 +12,4 @@ class UserForm(Form):
     gender = StringField('性别')
     signatrue = StringField('签名')
     pic = StringField('头像')
+

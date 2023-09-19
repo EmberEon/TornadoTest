@@ -7,7 +7,7 @@ settings = {
     'static_url_prefix': '/static/',
     'debug': True
 }
-port = 8820
+port = 8001
 
 mysql = {
     'database': 'forum',
