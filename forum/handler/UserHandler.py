@@ -1,7 +1,7 @@
 import urllib
 
 from forum.handler.BaseHandler import BaseHandler
-from forum.utils.zhi_fu_bao_utils import make_zhi_fu_bao_url
+from forum.utils.zhi_fu_bao_utils import make_zhi_fu_bao_url, queryalipay
 from forum.wtforms import UserForm
 from forum.models import UserModel
 from uuid import uuid4
@@ -72,11 +72,15 @@ class ZhiFuBaoPayHandler(BaseHandler):
 
 class BuyHandler(BaseHandler):
     def get(self, product_id):
-        product_id = product_id
+        data = {}
+        seller_id = "seller_id"
+        total_amount = 0.01
         out_trade_no = utils.get_obtain_order_number()
-        url = make_zhi_fu_bao_url(total_amount=product_id, out_trade_no=out_trade_no)
-        print(url)
-        self.redirect(url)
+        timeout_express = "90m"
+        result = make_zhi_fu_bao_url(total_amount=total_amount, out_trade_no=out_trade_no,
+                                     timeout_express=timeout_express)
+        print(result)
+        self.redirect(result)
 
 
 class AliPayNotify(BaseHandler):
