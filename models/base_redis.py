@@ -2,11 +2,8 @@ import json
 
 import redis
 
-from configs import config
-from models import task_model, server_model
-# from models import server_model
-from models.player_friendship import friend_model
-from utils import utils
+import config
+from forum import utils
 
 _seconds = 120  # 语音超时的秒数
 _connect = None  # 共享的redis连接对象
@@ -135,36 +132,6 @@ def get_sign_exist(sign):
 def save_code_sign(sign, expired=1800):
     name = "codesign:" + sign
     return share_connect().setex(name, expired, 1)
-
-
-# def save_child_game_command(command):
-#     name = "command"
-#     return share_connect().sadd(name, command)
-
-# def get_xxc_info():
-#     name = "hall_xxc_info"
-#     data = share_connect().get(name)
-#     if data:
-#         return eval(data)
-#     return []
-#
-#
-# def save_xxc_info(xxc_info):
-#     name = "hall_xxc_info"
-#     return share_connect().set(name, xxc_info)
-#
-#
-# def get_gz_xxc_info():
-#     name = "hall_gz_xxc_info"
-#     data = utils.to_dict(share_connect().get(name))
-#     if data:
-#         return data
-#     return []
-#
-#
-# def save_gz_xxc_info(xxc_info):
-#     name = "hall_gz_xxc_info"
-#     return share_connect().set(name, xxc_info)
 
 
 def get_face_config():
@@ -375,54 +342,6 @@ def set_login_try_count(ip, count):
     return share_connect().expire(name, 2 * 60 * 60)
 
 
-def get_friend_info(conn, uid, update=False):
-    # name = "friend_list"+str(uid)
-    # if not update:
-    #     friend_info = share_connect().get(name)
-    #     if friend_info:
-    #         return eval(friend_info)
-    friend_info = friend_model.get_by_uid(conn, uid)
-    # share_connect().set(name, friend_info)
-    return friend_info
-
-
-def get_apply_list_by_uid(conn, uid):
-    name = "apply_list" + str(uid)
-    apply_list = share_connect().get(name)
-    if apply_list:
-        return eval(apply_list)
-    apply_list = friend_model.get_apply_list_by_uid(conn, uid)
-    share_connect().set(name, apply_list)
-    return apply_list
-
-
-# def get_server_info(conn, game_type):
-#     game_type = str(game_type)
-#     name = "room_link"
-#     servers = share_connect().hget(name, game_type)
-#     if servers:
-#         return utils.to_dict(servers)
-#     servers = server_model.get_all_room_by_game_type(conn, game_type)
-#     info = {}
-#     if servers:
-#         for server in servers:
-#             info[server.get('sid')] = server
-#         share_connect().hset(name, game_type, str(info))
-#     return info
-#
-#
-# def get_all_game_type(conn):
-#     name = "GAME_TYPE_ALL"
-#     all_type = utils.to_dict(share_connect().get(name)) or {}
-#     if all_type:
-#         return all_type
-#     type_list = server_model.get_all_room(conn) or []
-#     for item in type_list:
-#         all_type[item.get('game_type')] = item.get('memo')
-#     all_type and share_connect().set(name, all_type)
-#     return all_type
-
-
 def get_guan_jie_sta(self, uid):
     name = "guan_jie_sta"
     data = share_connect().hget(name, uid)
@@ -492,32 +411,6 @@ def get_club_info(club_id):
     share_connect().hget(name, str(club_id))
 
 
-# def get_create_room_link_url(conn, game_type):
-#     name = "room_link"
-#     url = share_connect().hget(name, game_type)
-#     if not url:
-#         all_server_rooms = server_model.get_all_room(conn)
-#         for room in all_server_rooms:
-#             share_connect().hset(name, room.get('game_type'), room)
-#     data = share_connect().hget(name, game_type)
-#     return data
-
-
-# def get_room_link_by_server_id(conn, server_id):
-#     name = "room_link_"
-#     if not share_connect().hexists(name, server_id):
-#         server_room = server_model.get_room_link_server_id(conn, server_id)
-#         share_connect().hset(name, server_id, str(server_room))
-#     data = share_connect().hget(name, server_id)
-#     return utils.to_dict(data)
-
-
-# def set_create_room_link_url(conn, game_type, setting, sid=1):
-#     name = "room_link"
-#     server_model.set_create_room_link_url(conn, game_type, setting, sid)
-#     share_connect().hset(name, game_type, setting)
-
-
 def get_player_table_server(uid):
     name = "p_t_s"
     data = share_connect().hget(name, uid)
@@ -568,67 +461,8 @@ def get_all_p_in_m_uid():
     return p_in_m + p_in_dss
 
 
-def get_server_info(conn, game_type):
-    game_type = str(game_type)
-    name = "room_link"
-    servers = share_connect().hget(name, game_type)
-    if servers:
-        return utils.to_dict(servers)
-    servers = server_model.get_all_room_by_game_type(conn, game_type)
-    info = {}
-    if servers:
-        for server in servers:
-            info[server.get('sid')] = server
-        share_connect().hset(name, game_type, str(info))
-    return info
-
-
 def get_player_dss_bm_info(uid):
     return utils.to_dict(share_connect().hget('p_in_dss_bm', uid)) or None
-
-
-def get_friends_by_uid(conn, uid, update=True):
-    name = "friend_list"
-
-    if not update:
-        friend_lists = share_connect().hget(name, str(uid))
-        if not friend_lists:
-            friend_lists = friend_model.get_friends_by_uid(conn, uid)
-            share_connect().hset(name, str(uid), friend_lists)
-        else:
-            friend_lists = eval(friend_lists)
-        return friend_lists
-    else:
-        friend_lists = friend_model.get_friends_by_uid(conn, uid)
-        share_connect().hset(name, uid, friend_lists)
-        return friend_lists
-
-
-# def get_game_room_link(conn, game_type, update=False):
-#     name = "room_link"
-#     data = share_connect().hget(name, game_type)
-#     if not data or update:
-#         settings = server_model.get_all_room(conn)
-#         for setting in settings:
-#             game_type1 = setting.get('game_type')
-#             share_connect().hset(name, game_type1, setting)
-#
-#         data = share_connect().hget(name, game_type)
-#         if data:
-#             return eval(data)
-#         return None
-#     else:
-#         return eval(data)
-
-
-# def query_cbs_ranking(query_date: int, bd_type=1):
-#     if bd_type == 1:
-#         name = "cbs_phb_rb_" + utils.fmt_timestamp(query_date, fmt='%Y-%m-%d')
-#     elif bd_type == 2:
-#         name = "cbs_phb_zb_" + utils.fmt_timestamp(query_date, fmt='%Y_%W')
-#     else:
-#         name = "cbs_phb_yb_" + utils.fmt_timestamp(query_date, fmt='%Y-%m')
-#     return share_connect().exists(name)
 
 
 def cbs_get_rank_list(rank_id: str, start, end, bd=1):
@@ -655,18 +489,6 @@ def cbs_get_uid_ranking(rank_id: str, uid, bd=1):
 
 def is_exist_hash_kv(name: str, key):
     return share_connect().hexists(name, key)
-
-
-def get_task_configs(conn, task_type=1):
-    name = "task_configs_" + str(task_type)
-    data = share_connect().get(name)
-    if data:
-        return utils.to_dict(data)
-    else:
-        data = task_model.get_task_by_type(conn, task_type) or []
-        if data:
-            share_connect().set(name, data)
-        return data
 
 
 def cbs_get_player_info():

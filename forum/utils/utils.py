@@ -155,7 +155,8 @@ def read_file(file_path: str):
 
 
 def read_json_conf(key_name: str):
-    json_str = read_file('./configs/config.json')
+    # json_str = read_file('./configs/config.json')
+    json_str = read_file('./config.py')
     if json_str:
         try:
             json_data = json.loads(json_str)

@@ -1,7 +1,7 @@
 import redis
 
 from libs.torndb import Connection
-from utils import file_log, utils
+from forum.utils import utils, file_log
 
 RDS_CONN = None
 BASE_DB = None
