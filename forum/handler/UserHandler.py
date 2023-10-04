@@ -118,7 +118,12 @@ class WeatherHandler(BaseHandler):
         city = self.get_argument('city', 'Beijing')
         response = requests.get(self.API_URL.format(city, self.API_KEY))
         if response.status_code == 200:
-            self.write(response.json())
+            data = response.json()
+            main = data.get('main')
+            main['temp'] = str(round(main.get('temp') - 273.15, 1)) + '°C'
+            main['temp_min'] = str(round(main.get('temp_min') - 273.15, 1)) + '°C'
+            main['temp_max'] = str(round(main.get('temp_max') - 273.15, 1)) + '°C'
+            self.write(data)
         else:
             self.set_status(response.status_code)
             self.write({"error": "Unable to fetch weather data"})
