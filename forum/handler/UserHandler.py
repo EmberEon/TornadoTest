@@ -9,6 +9,7 @@ from forum.utils.email_util import send_mail
 from config import email
 from random import choice
 from forum.utils import utils
+import requests
 
 
 class AddUserHandler(BaseHandler):
@@ -107,3 +108,17 @@ class AliPayNotify(BaseHandler):
             serialparams = urllib.parse.unquote(urlenparams, 'utf-8', 'ignore')
             return serialparams
         return self.get_argument(name, '')
+
+
+class WeatherHandler(BaseHandler):
+    API_KEY = '72667c6e9bf10d68f07d3fa2bfb7889b'  # 请到 OpenWeatherMap 注册并获取 API KEY
+    API_URL = 'http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
+
+    async def get(self):
+        city = self.get_argument('city', 'Beijing')
+        response = requests.get(self.API_URL.format(city, self.API_KEY))
+        if response.status_code == 200:
+            self.write(response.json())
+        else:
+            self.set_status(response.status_code)
+            self.write({"error": "Unable to fetch weather data"})
