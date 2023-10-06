@@ -1,3 +1,5 @@
+from forum.utils import file_log
+
 items = [{"goods_id": 2104, "count": 1, "name": "1元话费×1", "img_url": "/ddz_goods_items/2104.png", "time_limit": 0},
          {"goods_id": 2103, "count": 1, "name": "30元话费×1", "img_url": "/ddz_goods_items/2103.png", "time_limit": 0},
          {"goods_id": 2115, "count": 1, "name": "50元话费×1", "img_url": "/ddz_goods_items/2115.png", "time_limit": 0},
@@ -25,4 +27,7 @@ sorted_items = sorted(items, key=custom_sort)
 
 # 打印排序后的物品列表
 for item in sorted_items:
+    file_log.info(item)
     print(item)
+
+
