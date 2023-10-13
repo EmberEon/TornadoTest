@@ -21,3 +21,8 @@ email = {
     'uname': '1419273079@qq.com',
     'password': 'yjfviaqbfooegdfe'
 }
+
+ali_yun_conf = {
+    'ALIBABA_CLOUD_ACCESS_KEY_ID': 'LTAI5tBezMjB9aGR9r38q2w8',
+    'ALIBABA_CLOUD_ACCESS_KEY_SECRET': 'CFxeA1oglkGBaR9F6t7gEToZDihJWK'
+}

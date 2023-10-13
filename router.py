@@ -1,6 +1,7 @@
 
 from forum.handler.BaseHandler import IndexHandler
-from forum.handler.UserHandler import AddUserHandler, SendEmail, ZhiFuBaoPayHandler, BuyHandler, AliPayNotify, WeatherHandler
+from forum.handler.UserHandler import AddUserHandler, SendEmail, ZhiFuBaoPayHandler, BuyHandler, AliPayNotify, \
+    WeatherHandler, CheckHandler
 
 handlers = [
     ('/api/user/add', AddUserHandler),
@@ -10,4 +11,5 @@ handlers = [
     ('/buy/(\d+)', BuyHandler),
     ('/aliPayNotify', AliPayNotify),
     ("/getWeather", WeatherHandler),
+    ("/check", CheckHandler),
 ]

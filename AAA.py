@@ -27,7 +27,7 @@ sorted_items = sorted(items, key=custom_sort)
 
 # 打印排序后的物品列表
 for item in sorted_items:
-    file_log.info(item)
+    file_log.fail_log
     print(item)
 
 

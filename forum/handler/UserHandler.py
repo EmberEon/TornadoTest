@@ -1,3 +1,4 @@
+import json
 import urllib
 
 from forum.handler.BaseHandler import BaseHandler
@@ -10,6 +11,7 @@ from config import email
 from random import choice
 from forum.utils import utils
 import requests
+from forum.utils import ali_yun
 
 
 class AddUserHandler(BaseHandler):
@@ -127,3 +129,10 @@ class WeatherHandler(BaseHandler):
         else:
             self.set_status(response.status_code)
             self.write({"error": "Unable to fetch weather data"})
+
+
+class CheckHandler(BaseHandler):
+    async def get(self):
+        a = await ali_yun.check_txt()
+        return await self.write_json(a)
+        print(a)
