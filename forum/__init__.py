@@ -1,5 +1,5 @@
 from tornado import web
-from config import settings, port, mysql
+from configs.config import settings, port, mysql
 import peewee_async
 import redis
 

@@ -7,7 +7,7 @@ from forum.wtforms import UserForm
 from forum.models import UserModel
 from uuid import uuid4
 from forum.utils.email_util import send_mail
-from config import email
+from configs.config import email
 from random import choice
 from forum.utils import utils
 import requests

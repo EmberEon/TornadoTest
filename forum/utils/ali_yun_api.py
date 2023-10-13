@@ -1,6 +1,6 @@
 from alibabacloud_imageaudit20191230 import models as imageaudit_20191230_models
 from alibabacloud_sample.sample import Sample
-from config import ali_yun_conf
+from configs.config import ali_yun_conf
 from forum.handler.BaseHandler import BaseHandler
 from alibabacloud_tea_util import models as util_models
 from alibabacloud_tea_util.client import Client as UtilClient
