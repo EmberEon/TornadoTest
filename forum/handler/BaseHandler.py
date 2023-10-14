@@ -24,6 +24,4 @@ class BaseHandler(web.RequestHandler):
         raise web.Finish
 
 
-class IndexHandler(web.RequestHandler):
-    async def get(self):
-        return self.finish({'msg': 'success', 'code': 200})
+

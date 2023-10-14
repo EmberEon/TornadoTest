@@ -5,8 +5,7 @@ import redis
 
 db = peewee_async.MySQLDatabase(**mysql)
 obj = peewee_async.Manager(db)
-r = redis.Redis(host='localhost', port=6379, db=0)
-
+r = redis.Redis(host='192.168.232.92', port=26379, db=0, password='Cmz@123456')
 from router import handlers
 
 

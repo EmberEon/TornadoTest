@@ -1,5 +1,9 @@
 import json
 import urllib
+from asyncio import sleep
+
+import aioredis
+import redis
 
 from forum.handler.BaseHandler import BaseHandler
 from forum.utils.zhi_fu_bao_utils import make_zhi_fu_bao_url, queryalipay
@@ -136,3 +140,29 @@ class CheckHandler(BaseHandler):
         a = await ali_yun.check_txt()
         return await self.write_json(a)
         print(a)
+
+
+class IndexHandler(BaseHandler):
+    async def get(self):
+        self.redis.publish("RED_DOT_MSG_DDZ", "hello!cmz")
+        return self.finish({'msg': 0, 'code': 200, })
+
+
+class MessagesHandler(BaseHandler):
+    async def get(self):
+        redis = await aioredis.create_redis(address='redis://192.168.232.92:26379', password='Cmz@123456', db=0)
+        try:
+            channel_name = 'RED_DOT_MSG_DDZ'
+            # 订阅频道
+            channel, = await redis.subscribe(channel_name)
+            message = await channel.get(encoding='utf-8')
+            sleep(0.5)
+            if message:
+                print(f"Received: {message}")
+                return await self.write_json(data={"message": message})
+            else:
+                print("没有消息")
+                return await self.write_json(desc="没有消息")
+        finally:
+            redis.close()
+            await redis.wait_closed()
