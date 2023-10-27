@@ -1,5 +1,5 @@
 from forum.handler.UserHandler import AddUserHandler, SendEmail, ZhiFuBaoPayHandler, BuyHandler, AliPayNotify, \
-    WeatherHandler, CheckHandler, IndexHandler, MessagesHandler, DownloadHandler, WxStartHandler
+    WeatherHandler, CheckHandler, IndexHandler, MessagesHandler, DownloadHandler, WeChatVerificationHandler
 
 handlers = [
     ('/api/user/add', AddUserHandler),
@@ -12,5 +12,5 @@ handlers = [
     ("/check", CheckHandler),
     ("/messages", MessagesHandler),
     ("/download", DownloadHandler),
-    ("/start", WxStartHandler),
+    ("/wechat", WeChatVerificationHandler),
 ]
