@@ -18,6 +18,7 @@ import requests
 from forum.utils import ali_yun
 import tornado.web
 import os
+import hashlib
 
 
 class AddUserHandler(BaseHandler):
@@ -183,3 +184,33 @@ class DownloadHandler(tornado.web.RequestHandler):
         with open(software_path, 'rb') as file:
             self.write(file.read())
         self.finish()
+
+class WxStartHandler(tornado.web.RequestHandler):
+    # 验证签名
+    def check_signature(self, signature, timestamp, nonce):
+        """校验token是否正确"""
+        # 这个是token 和我们在微信公众平台配置接口填写一致
+        token = 'iotbird'
+        L = [timestamp, nonce, token]
+        L.sort()
+        s = L[0] + L[1] + L[2]
+        sha1 = hashlib.sha1(s.encode('utf-8')).hexdigest()
+        # 对于验证结果返回true or false
+        return sha1 == signature
+
+    # 这是get请求，处理配置接口验证的
+    def get(self):
+        try:
+            # 获取参数
+            signature = self.get_argument('signature')
+            timestamp = self.get_argument('timestamp')
+            nonce = self.get_argument('nonce')
+            echostr = self.get_argument('echostr')
+            # 调用验证函数
+            result = self.check_signature(signature, timestamp, nonce)
+            if result:
+                self.write(echostr)
+            else:
+                print('微信sign校验,---校验失败')
+        except Exception as e:
+            print(e)
