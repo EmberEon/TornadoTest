@@ -19,6 +19,7 @@ async def create_data():
 
 
 if __name__ == '__main__':
+    print('http://192.168.112.65:8001/download')
     start_app()
     # create_table()
     # result = ioloop.IOLoop.current().run_sync(create_data)

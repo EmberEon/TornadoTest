@@ -16,6 +16,8 @@ from random import choice
 from forum.utils import utils
 import requests
 from forum.utils import ali_yun
+import tornado.web
+import os
 
 
 class AddUserHandler(BaseHandler):
@@ -150,7 +152,7 @@ class IndexHandler(BaseHandler):
 
 class MessagesHandler(BaseHandler):
     async def get(self):
-        redis = await aioredis.create_redis(address='redis://192.168.232.92:26379', password='Cmz@123456', db=0)
+        redis = await aioredis.create_redis(address='redis://192.168.232.128:26379', password='Cmz@123456', db=0)
         try:
             channel_name = 'RED_DOT_MSG_DDZ'
             # 订阅频道
@@ -166,3 +168,18 @@ class MessagesHandler(BaseHandler):
         finally:
             redis.close()
             await redis.wait_closed()
+
+
+class DownloadHandler(tornado.web.RequestHandler):
+    def get(self):
+        # 定义您的软件的路径
+        software_path = './software.txt'
+        # 为下载的文件设置一个名称
+        download_name = os.path.basename(software_path)
+
+        self.set_header('Content-Type', 'application/octet-stream')
+        self.set_header('Content-Disposition', f'attachment; filename={download_name}')
+
+        with open(software_path, 'rb') as file:
+            self.write(file.read())
+        self.finish()
